@@ -1,0 +1,66 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://xd/XScripts/XDateEdit.tscn" type="PackedScene" id=1]
+[ext_resource path="res://xd/XScripts/XTimeEdit.tscn" type="PackedScene" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends HBoxContainer
+
+signal datetime_changed(datetime)
+
+var datetime = XDateTime.current() : set = set_datetime
+
+
+func _ready():
+	datetime_changed.connect(_on_datetime_changed)
+	_on_datetime_changed(datetime)
+
+
+func set_datetime(val):
+	if XDateTime.compare(datetime,val)!=0:
+		datetime = val
+		datetime_changed.emit(datetime)
+
+
+func _on_datetime_changed(datetime):
+	$XDateEdit.date = datetime.date
+	$XTimeEdit.time = datetime.time
+
+
+func _on_XDateEdit_date_changed(date):
+	var new_datetime = XDateTime.new()
+	new_datetime.date = date
+	new_datetime.time = datetime.time
+	datetime = new_datetime
+
+
+func _on_XTimeEdit_time_changed(time):
+	var new_datetime = XDateTime.new()
+	new_datetime.date = datetime.date
+	new_datetime.time = time
+	datetime = new_datetime
+"
+
+[node name="XDateTimeEdit" type="HBoxContainer"]
+offset_right = 202.0
+offset_bottom = 40.0
+size_flags_horizontal = 3
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="XDateEdit" parent="." instance=ExtResource( 1 )]
+offset_right = 121.0
+offset_bottom = 40.0
+size_flags_stretch_ratio = 11.0
+
+[node name="XTimeEdit" parent="." instance=ExtResource( 2 )]
+offset_left = 125.0
+offset_right = 202.0
+offset_bottom = 40.0
+size_flags_stretch_ratio = 7.0
+structured_text_bidi_override_options = [  ]
+
+[connection signal="date_changed" from="XDateEdit" to="." method="_on_XDateEdit_date_changed"]
+[connection signal="time_changed" from="XTimeEdit" to="." method="_on_XTimeEdit_time_changed"]

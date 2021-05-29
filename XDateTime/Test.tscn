@@ -1,0 +1,62 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://xd/XScripts/XTimeEdit.tscn" type="PackedScene" id=1]
+[ext_resource path="res://xd/XScripts/XDateEdit.tscn" type="PackedScene" id=2]
+[ext_resource path="res://xd/XScripts/XDateTimeEdit.tscn" type="PackedScene" id=3]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+
+
+func _on_XDateEdit_date_changed(value):
+	$TextEdit.text += \"date_chnged: %s\\n\"%value
+	pass # Replace with function body.
+
+
+func _on_XTimeEdit_time_changed(time):
+	$TextEdit.text += \"time_chnged: %s\\n\"%time
+
+
+func _on_XDateTimeEdit_datetime_changed(datetime):
+	$TextEdit.text += \"datetime_chnged: %s\\n\"%datetime
+"
+
+[node name="Test" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextEdit" type="TextEdit" parent="."]
+offset_left = 150.0
+offset_top = 79.0
+offset_right = 510.0
+offset_bottom = 455.0
+structured_text_bidi_override_options = [  ]
+script = null
+
+[node name="XDateEdit" parent="." instance=ExtResource( 2 )]
+offset_left = 537.0
+offset_top = 84.0
+offset_right = 679.0
+offset_bottom = 118.0
+
+[node name="XTimeEdit" parent="." instance=ExtResource( 1 )]
+offset_left = 540.0
+offset_top = 141.0
+offset_right = 661.0
+offset_bottom = 176.0
+structured_text_bidi_override_options = [  ]
+
+[node name="XDateTimeEdit" parent="." instance=ExtResource( 3 )]
+offset_left = 542.0
+offset_top = 196.0
+offset_right = 744.0
+offset_bottom = 236.0
+
+[connection signal="date_changed" from="XDateEdit" to="." method="_on_XDateEdit_date_changed"]
+[connection signal="time_changed" from="XTimeEdit" to="." method="_on_XTimeEdit_time_changed"]
+[connection signal="datetime_changed" from="XDateTimeEdit" to="." method="_on_XDateTimeEdit_datetime_changed"]

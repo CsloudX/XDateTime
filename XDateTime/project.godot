@@ -1,0 +1,47 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Reference",
+"class": @"XDate",
+"language": @"GDScript",
+"path": "res://xd/XScripts/XDate.gd"
+}, {
+"base": "Reference",
+"class": @"XDateTime",
+"language": @"GDScript",
+"path": "res://xd/XScripts/XDateTime.gd"
+}, {
+"base": "Reference",
+"class": @"XGlobal",
+"language": @"GDScript",
+"path": "res://xd/XScripts/XGlobal.gd"
+}, {
+"base": "Reference",
+"class": @"XTime",
+"language": @"GDScript",
+"path": "res://xd/XScripts/XTime.gd"
+} ]
+_global_script_class_icons={
+@"XDateTime": "",
+@"XDate": "",
+@"XTime": "",
+@"XGlobal": ""
+}
+
+[application]
+
+config/name="XDateTime"
+run/main_scene="res://Test.tscn"
+config/icon="res://icon.png"
+
+[rendering]
+
+environment/defaults/default_environment="res://default_env.tres"

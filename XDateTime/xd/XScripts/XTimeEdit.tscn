@@ -1,0 +1,49 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends LineEdit
+
+signal time_changed(time)
+
+var time = XTime.current(): set = set_time
+
+func _ready():
+	time_changed.connect(_on_time_changed)
+	_on_time_changed(time)
+	deselect()
+
+
+func set_time(val):
+	if XTime.compare(time,val)!=0:
+		time = val
+		time_changed.emit(time)
+
+
+func _on_time_changed(val):
+	text = val.format()
+
+
+func _on_XTimeEdit_text_changed(new_text):
+	var p = caret_column
+	var ss = new_text.split(\":\")
+	if ss.size()==3:
+		time = XTime.new(ss[0].to_int(),ss[1].to_int(),ss[2].to_int())
+	if p==2 or p==5:
+		p+=1
+	caret_column = p
+	select(p,p+1)
+"
+
+[node name="XTimeEdit" type="LineEdit"]
+offset_right = 121.0
+offset_bottom = 35.0
+rect_min_size = Vector2( 75, 0 )
+size_flags_horizontal = 3
+text = "16:23:32"
+structured_text_bidi_override_options = [  ]
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="text_changed" from="." to="." method="_on_XTimeEdit_text_changed"]

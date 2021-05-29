@@ -1,0 +1,94 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://xd/XScripts/XCalendarPopup.tscn" type="PackedScene" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+signal date_changed(date)
+
+@onready
+var line_edit = $HBoxContainer/LineEdit
+
+var date = XDate.current(): set=set_date
+
+func _ready():
+	date_changed.connect(_on_date_changed)
+	_on_date_changed(date)
+	line_edit.deselect()
+
+
+func set_date(val):
+	if XDate.compare(date,val)!=0:
+		date = val
+		date_changed.emit(date)
+
+
+func _on_date_changed(value):
+	line_edit.text = value.format()
+	
+
+
+func _on_LineEdit_text_changed(new_text:String):
+	var p = line_edit.caret_column
+	var ss = new_text.split(\"/\")
+	if ss.size()==3:
+		set_date(XDate.new(ss[0].to_int(),ss[1].to_int(),ss[2].to_int()))
+	if p==4 or p==7:
+		p+=1
+	line_edit.caret_column = p+1
+	line_edit.select(p,p+1)
+
+
+func _on_Button_pressed():
+	var pos = rect_global_position + Vector2(0,rect_size.y)
+	$XCalendarPopup.popup_on_parent(Rect2(pos,Vector2.ONE))
+	$XCalendarPopup.date = date
+
+
+func _on_XCalendarPopup_date_changed(val):
+	date = val
+"
+
+[node name="XDateEdit" type="Control"]
+offset_right = 126.0
+offset_bottom = 49.0
+rect_min_size = Vector2( 120, 0 )
+size_flags_horizontal = 3
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 0
+script = null
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LineEdit" type="LineEdit" parent="HBoxContainer"]
+offset_right = 104.0
+offset_bottom = 49.0
+size_flags_horizontal = 3
+text = "2019/03/25"
+structured_text_bidi_override_options = [  ]
+script = null
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="HBoxContainer"]
+offset_left = 104.0
+offset_right = 126.0
+offset_bottom = 49.0
+text = "V"
+script = null
+
+[node name="XCalendarPopup" parent="." instance=ExtResource( 1 )]
+
+[connection signal="text_changed" from="HBoxContainer/LineEdit" to="." method="_on_LineEdit_text_changed"]
+[connection signal="pressed" from="HBoxContainer/Button" to="." method="_on_Button_pressed"]
+[connection signal="date_changed" from="XCalendarPopup" to="." method="_on_XCalendarPopup_date_changed"]
